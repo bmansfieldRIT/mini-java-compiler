@@ -1,0 +1,26 @@
+class TestOptimization{
+    public static void main(String[] a){
+	    System.out.println( new PrintNums().Start(10) );
+    }
+}
+
+class PrintNums {
+
+    public int Start(int num){
+        int num2;
+        int unused;
+        int unused2;
+
+        unused = 1;
+        num2 = 0;
+        unused2 = 3 + 5 + 5;
+        unused = 3;
+
+        while (num2 < num){
+            System.out.println(num2);
+            num2 = num2 + 1;
+        }
+        return num2;
+    }
+
+}
