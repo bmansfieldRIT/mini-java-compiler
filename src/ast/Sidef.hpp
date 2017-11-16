@@ -1,6 +1,6 @@
 //
 //  Sidef.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/23/17.
 //
@@ -17,12 +17,11 @@ class Visitor;
 
 class Sidef : public Statement
 {
-    
+
 public:
     Exp* expr;
     Sidef(Exp* e);
     void accept(Visitor& v);
-    
 };
 
 #endif /* Sidef_hpp */

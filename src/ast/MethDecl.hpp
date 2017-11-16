@@ -1,6 +1,6 @@
 //
 //  MethDecl.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/23/17.
 //
@@ -22,9 +22,8 @@ class Visitor;
 
 using namespace std;
 
-class MethDecl 
+class MethDecl
 {
-    
 public:
     Type* methType;
     Var* methID;
@@ -34,11 +33,16 @@ public:
     vector<Statement*> statements;
     Exp* ret;
     Symbol* sym;
-    
-    MethDecl(Type* methT, Var* methVar, vector<Type*> argTs, vector<Var*> argVs, vector<VarDecl*> varDs, vector<Statement*> stmnts, Exp* r); // all fields
-    
+
+    MethDecl(Type* methT,
+        Var* methVar,
+        vector<Type*> argTs,
+        vector<Var*> argVs,
+        vector<VarDecl*> varDs,
+        vector<Statement*> stmnts,
+        Exp* r); // all fields
+
     void accept(Visitor& v);
-    
 };
 
 #endif /* MethDecl_hpp */

@@ -1,6 +1,6 @@
 //
 //  Optimization.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 4/21/17.
 //
@@ -63,15 +63,15 @@ using namespace std;
 
 class Optimization : public Visitor
 {
-    
+
 public:
-    
+
     // Constructor
     Optimization(void);
     vector<Equals*> unused;
     vector<Equals*> used;
     bool addtoused;
-    
+
     // Expressions
     void visit(True* e);
     void visit(False* e);
@@ -81,7 +81,7 @@ public:
     void visit(StringLiteral* e);
     void visit(Var* e);
     void visit(New* e);
-    
+
     void visit(And* e);
     void visit(Or* e);
     void visit(LessThan* e);
@@ -93,7 +93,7 @@ public:
     void visit(Length* e);
     void visit(FuncCall* e);
     void visit(IntArray* e);
-    
+
     // Statements
     void visit(Print* e);
     void visit(If* e);
@@ -102,20 +102,19 @@ public:
     void visit(Sidef* e);
     void visit(Equals* e);
     void visit(ArrayAccess* e);
-    
+
     // Types
     void visit(Boolean* e);
     void visit(IntArrayType* e);
     void visit(Integer* e);
     void visit(String* e);
-    
+
     // Declarations
     void visit(VarDecl* e);
     void visit(MethDecl* e);
     void visit(ClassDecl* e);
     void visit(MainClass* e);
     void visit(Program* e);
-    
 };
 
 

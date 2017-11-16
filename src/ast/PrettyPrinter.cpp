@@ -1,6 +1,6 @@
 //
 //  PrettyPrinter.cpp
-//  
+//
 //
 //  Created by Brian Mansfield on 4/10/17.
 //
@@ -58,7 +58,7 @@ void PrettyPrinter::visit(New* e)
 
 void PrettyPrinter::visit(And* e)
 {
-    
+
     e->lhs->accept(*this);
     std::cout << " && ";
     e->rhs->accept(*this);
@@ -121,7 +121,6 @@ void PrettyPrinter::visit(Length* e)
 
 void PrettyPrinter::visit(FuncCall* e)
 {
-    
     e->expr->accept(*this);
     std::cout << ".";
     e->id->accept(*this);
@@ -158,7 +157,7 @@ void PrettyPrinter::visit(If* e)
         std::cout << " else ";
         e->elze->accept(*this);
     }
-    
+
     std::cout << "\n}\n";
 }
 
@@ -189,10 +188,9 @@ void PrettyPrinter::visit(Sidef* e)
 
 void PrettyPrinter::visit(Equals* e)
 {
-    
     if (e->arr != NULL){
         e->arr->accept(*this);
-        
+
     } else {
         e->id->accept(*this);
     }
@@ -205,7 +203,7 @@ void PrettyPrinter::visit(ArrayAccess* e)
 {
     if (e->var != NULL){
         e->var->accept(*this);
-        
+
     } else {
         e->expr1->accept(*this);
     }
@@ -254,7 +252,7 @@ void PrettyPrinter::visit(MethDecl* e)
 {
     e->methType->accept(*this);
     e->methID->accept(*this);
-    
+
     std::cout << "(";
     if (e->argTypes.size() > 0){
         for (int i = 0; i < e->argTypes.size(); i++){
@@ -264,13 +262,13 @@ void PrettyPrinter::visit(MethDecl* e)
         }
     }
     std::cout << "){\n";
-    
+
     for (int i = 0; i < e->vardecls.size(); i++){
         std::cout << "\t\t";
         e->vardecls[i]->accept(*this);
         std::cout << "\n";
     }
-    
+
     for (int i = 0; i < e->statements.size(); i++){
         if (e->statements[i] != NULL){
             std::cout << "\t\t";
@@ -278,11 +276,10 @@ void PrettyPrinter::visit(MethDecl* e)
             std::cout << "\n";
         }
     }
-    
+
     std::cout << "\t\treturn ";
     e->ret->accept(*this);
     std::cout << ";\n\t}";
-    
 }
 
 /*
@@ -290,17 +287,16 @@ void PrettyPrinter::visit(MethDecl* e)
  */
 void PrettyPrinter::visit(ClassDecl* e)
 {
-    
     std::cout << "class ";
     e->id->accept(*this);
-    
+
     if (e->extID != NULL){
         std::cout << " extends ";
         e->extID->accept(*this);
     }
-    
+
     std::cout << "{\n";
-    
+
     if (e->vardecls.size() > 0){
         for (int i = 0; i < e->vardecls.size(); i++){
             std::cout << "\t";
@@ -308,14 +304,14 @@ void PrettyPrinter::visit(ClassDecl* e)
             std::cout << "\n";
         }
     }
-    
+
     if (e->methdecls.size() > 0){
         for (int i = 0; i < e->methdecls.size(); i++){
             std::cout << "\t";
             e->methdecls[i]->accept(*this);
             std::cout << "\n";
         }
-        
+
     }
     std::cout << "}\n";
 }
@@ -329,7 +325,7 @@ void PrettyPrinter::visit(MainClass* e)
     e->id->accept(*this);
     std::cout << " {\n";
     std::cout << "\tpublic static void main (String[] args){\n";
-    
+
     if (e->statements.size() > 0){
         for (int i = 0; i < e->statements.size(); i++){
             std::cout << "\t\t";
@@ -347,7 +343,7 @@ void PrettyPrinter::visit(MainClass* e)
 void PrettyPrinter::visit(Program* e)
 {
     e->main->accept(*this);
-    
+
     if (e->classes.size() > 0){
         for (int i = 0; i < e->classes.size(); i++){
             e->classes[i]->accept(*this);

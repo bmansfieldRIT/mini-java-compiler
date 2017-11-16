@@ -1,6 +1,6 @@
 //
 //  For.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/22/17.
 //
@@ -17,7 +17,10 @@
 class For : public Statement
 {
 public:
-    For(SingleStatement i, Exp e, SingleStatement s, Statement statement);
+    For(SingleStatement i,
+        Exp e,
+        SingleStatement s,
+        Statement statement);
     SingleStatement init;
     Exp expr;
     SingleStatement step;

@@ -1,6 +1,6 @@
 //
 //  VarDecl.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/23/17.
 //
@@ -18,13 +18,12 @@ class Visitor;
 
 class VarDecl : public Tree
 {
-    
+
 public:
     Type* type;
     Var* id;
     VarDecl(Type* t, Var* v);
     void accept(Visitor& v);
-    
 };
 
 #endif /* VarDecl_hpp */

@@ -1,6 +1,6 @@
 //
 //  Or.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/23/17.
 //
@@ -16,13 +16,12 @@ class Visitor;
 
 class Or : public Exp
 {
-    
+
 public:
     Exp* lhs;
     Exp* rhs;
     Or(Exp* lhs, Exp* rhs);
     void accept(Visitor& v);
-    
 };
 
 #endif /* Or_hpp */

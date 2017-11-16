@@ -1,6 +1,6 @@
 //
 //  Not.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/24/17.
 //
@@ -16,12 +16,11 @@ class Visitor;
 
 class Not : public Exp
 {
-    
+
 public:
     Exp* expr;
     Not(Exp* e);
     void accept(Visitor& v);
-    
 };
 
 #endif /* Not_hpp */

@@ -1,6 +1,6 @@
 //
 //  StringLiteral.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/23/17.
 //
@@ -19,12 +19,11 @@ using namespace std;
 
 class StringLiteral : public Exp
 {
-    
+
 public:
     string str;
     StringLiteral(string s);
     void accept(Visitor& v);
-    
 };
 
 #endif /* StringLiteral_hpp */

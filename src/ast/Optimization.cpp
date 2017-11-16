@@ -1,6 +1,6 @@
 //
 //  Optimization.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 4/21/17.
 //
@@ -15,30 +15,20 @@ Optimization::Optimization()
 /*
  * Expressions
  */
-void Optimization::visit(True* e)
-{
-}
+void Optimization::visit(True* e) {}
 
-void Optimization::visit(False* e)
-{
-}
+void Optimization::visit(False* e) {}
 
-void Optimization::visit(This* e)
-{
-}
+void Optimization::visit(This* e) {}
 
 void Optimization::visit(Not* e)
 {
     e->expr->accept(*this);
 }
 
-void Optimization::visit(IntLiteral* e)
-{
-}
+void Optimization::visit(IntLiteral* e) {}
 
-void Optimization::visit(StringLiteral* e)
-{
-}
+void Optimization::visit(StringLiteral* e) {}
 
 void Optimization::visit(Var* e)
 {
@@ -157,7 +147,7 @@ void Optimization::visit(Equals* e)
     e->rhs->accept(*this);
     if (e->arr != NULL)
         e->arr->accept(*this);
-    
+
     // check if assignment is preceeded by an unused previous assignment of the same variable
     for (int i = 0; i < unused.size(); i++){
         if (unused[i]->id->varID == e->id->varID){
@@ -165,12 +155,12 @@ void Optimization::visit(Equals* e)
             unused.erase(unused.begin() + i);
         }
     }
-    
+
     // push new assignment into unused vector
     if (!addtoused)
         unused.push_back(e);
     addtoused = false;
-    
+
 }
 
 void Optimization::visit(ArrayAccess* e)
@@ -181,21 +171,10 @@ void Optimization::visit(ArrayAccess* e)
 /*
  * Types
  */
-void Optimization::visit(Boolean* e)
-{
-}
-
-void Optimization::visit(IntArrayType* e)
-{
-}
-
-void Optimization::visit(Integer* e)
-{
-}
-
-void Optimization::visit(String* e)
-{
-}
+void Optimization::visit(Boolean* e) {}
+void Optimization::visit(IntArrayType* e) {}
+void Optimization::visit(Integer* e) {}
+void Optimization::visit(String* e) {}
 
 /*
  *  Var Declaration
@@ -226,7 +205,7 @@ void Optimization::visit(ClassDecl* e)
     for (int i = 0; i < unused.size(); i++){
         unused[i]->unused = true; //  mark remaining unused variables as dead
     }
-    
+
 }
 
 /*
@@ -248,7 +227,7 @@ void Optimization::visit(MainClass* e)
 void Optimization::visit(Program* e)
 {
     e->main->accept(*this);
-    
+
     for (int i = 0; i < e->classes.size(); i++){
         e->classes[i]->accept(*this);
     }

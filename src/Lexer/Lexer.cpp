@@ -54,10 +54,10 @@ void Lexer::initSymbols(map<char, int>& sym)
 void Lexer::printTokens(vector<Token>& tok, string filename)
 {
     //std::cout << "Outputting tokens to .Lexed file...\n";
-    
+
     string f_filename = filename + ".lexed";
     outputFile.open(f_filename);
-    
+
     for (int i = 0; i < tok.size(); i++){
         outputFile << tok[i].row << ":" << tok[i].col;
         switch(tok[i].id){
@@ -97,7 +97,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 11:
                 outputFile << " RBRACKET()\n";
                 break;
-                
+
             case 12:
                 outputFile << " LBRACE()\n";
                 break;
@@ -110,7 +110,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 15:
                 outputFile << " OR()\n";
                 break;
-                
+
             case 16:
                 outputFile << " LESSTHAN()\n";
                 break;
@@ -123,7 +123,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 19:
                 outputFile << " TIMES()\n";
                 break;
-                
+
             case 20:
                 outputFile << " DIV()\n";
                 break;
@@ -136,7 +136,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 23:
                 outputFile << " STATIC()\n";
                 break;
-                
+
             case 24:
                 outputFile << " VOID()\n";
                 break;
@@ -149,7 +149,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 27:
                 outputFile << " INT()\n";
                 break;
-                
+
             case 28:
                 outputFile << " BOOLEAN()\n";
                 break;
@@ -162,7 +162,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 31:
                 outputFile << " ELSE()\n";
                 break;
-                
+
             case 32:
                 outputFile << " MAIN()\n";
                 break;
@@ -175,7 +175,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 35:
                 outputFile << " TRUE()\n";
                 break;
-                
+
             case 36:
                 outputFile << " FALSE()\n";
                 break;
@@ -188,7 +188,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 39:
                 outputFile << " PRINTLN()\n";
                 break;
-                
+
             case 40:
                 outputFile << " SIDEF()\n";
                 break;
@@ -201,7 +201,7 @@ void Lexer::printTokens(vector<Token>& tok, string filename)
             case 43:
                 outputFile << " INTLIT(" << tok[i].intval << ")\n";
                 break;
-                
+
             case 44:
                 outputFile << " BANG()\n";
                 break;
@@ -216,48 +216,47 @@ void Lexer::lexNext(CharStream& cs, bool skip = false)
 {
     cs.next();
     index++;
-    
+
     current = cs.getCurrent();
     lookahead = cs.lookAhead();
-    
+
     if (!skip)
         buffer.push_back(current);
-    
 }
 
 vector<Token> Lexer::lexFile(char* filename)
 {
-    
+
     map<string, int> keywords;
     map<char, int> symbols;
     vector<Token> tokens;
     string temp;
     int fIndx;
-    
+
     initKeywords(keywords);
     initSymbols(symbols);
-    
+
     //std::cout << "Creating character stream...\n";
     CharStream cs(filename);
-    
+
     //std::cout << "Tokenizing character stream...\n";
     while (cs.next()){
-        
+
         buffer.clear();
         current = cs.getCurrent();
         lookahead = cs.lookAhead();
-        
+
         fIndx = index;
-        
+
         if (isalpha(current)){
             buffer.push_back(current);
-            
+
             while (isalpha(lookahead) || isdigit(lookahead) || lookahead == '_'){
                 lexNext(cs);
             }
-            
+
             temp = string(buffer.begin(), buffer.end());
-            
+
             // determine if we have a println statement
             if (temp  == "System"){
                 if (lookahead == '.'){
@@ -265,9 +264,9 @@ vector<Token> Lexer::lexFile(char* filename)
                     while (isalpha(lookahead)){
                         lexNext(cs);
                     }
-                    
+
                     temp = string(buffer.begin(), buffer.end());
-                    
+
                     if (temp == "System.out"){
                         if (lookahead == '.'){
                             lexNext(cs);
@@ -285,9 +284,9 @@ vector<Token> Lexer::lexFile(char* filename)
                 } else
                     tokens.push_back(Token(Token::ID, temp, 0, cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
             } else {
-                
+
                 auto search = keywords.find(temp);
-                
+
                 // if token is keyword, add as keyword
                 if (search != keywords.end()){
                     tokens.push_back(Token(search->second, "", 0, cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
@@ -296,24 +295,24 @@ vector<Token> Lexer::lexFile(char* filename)
                     tokens.push_back(Token(Token::ID, temp, 0, cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
                 }
             }
-            
+
         } else if (isdigit(current)){ // check numeric symbols
-            
+
             buffer.push_back(current);
             lookahead = cs.lookAhead();
             while (isdigit(lookahead)){
                 lexNext(cs);
             }
-            
+
             temp = string(buffer.begin(), buffer.end());
             tokens.push_back(Token(Token::INTLIT, "", stoi(temp), cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
-            
-        } else if (current == '"'){ // string literal 
+
+        } else if (current == '"'){ // string literal
             //string errorMsg = "Error: Invalid string literal\n";
             //throw errorMsg;
-            
+
             lexNext(cs);
-            
+
             while (current != '"'){
                 if (lookahead == '"'){
                     lexNext(cs, true);
@@ -321,21 +320,21 @@ vector<Token> Lexer::lexFile(char* filename)
                     lexNext(cs);
                 }
             }
-             
+
             temp = string(buffer.begin(), buffer.end());
-             
+
             // pushing this token seems to cause a runtime error
             tokens.push_back(Token(Token::STRINGLIT, temp, 0, cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
-            
+
         } else if (!isspace(current) && current != '\n') {
-            
+
             // search the one character symbol table for a quick tokenization
             // if no match is found, we must lookahead to match the remaining symbols
             auto search = symbols.find(current);
             if (search != symbols.end()){ // if search found a match
                 tokens.push_back(Token(search->second, "", 0, cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
             } else {
-                
+
                 switch (current){
                     case '&':
                         if (lookahead == '&'){
@@ -390,8 +389,8 @@ vector<Token> Lexer::lexFile(char* filename)
         index++;
     }
     tokens.push_back(Token(Token::EOFILE, "", 0, cs.getBufferRow(fIndx), cs.getBufferCol(fIndx)));
-    
+
     //std::cout << "Finished tokenizing character stream...\n";
-    
+
     return tokens;
 }

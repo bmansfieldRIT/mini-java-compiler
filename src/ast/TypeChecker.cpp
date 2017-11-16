@@ -1,6 +1,6 @@
 //
 //  TypeChecker.cpp
-//  
+//
 //
 //  Created by Brian Mansfield on 4/21/17.
 //
@@ -27,9 +27,7 @@ void TypeChecker::visit(False* e)
     type_t = Symbol::BOOLEAN;
 }
 
-void TypeChecker::visit(This* e)
-{
-}
+void TypeChecker::visit(This* e) {}
 
 void TypeChecker::visit(Not* e)
 {
@@ -51,9 +49,7 @@ void TypeChecker::visit(Var* e)
     type_t = e->sym->type;
 }
 
-void TypeChecker::visit(New* e)
-{
-}
+void TypeChecker::visit(New* e) {}
 
 // only type checks if both sides are of type boolean
 void TypeChecker::visit(And* e)
@@ -64,14 +60,14 @@ void TypeChecker::visit(And* e)
 
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != Symbol::BOOLEAN || e->rhs->sym->type != Symbol::BOOLEAN){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     e->sym = new Symbol(Symbol::BOOLEAN);
 }
 
@@ -81,17 +77,17 @@ void TypeChecker::visit(Or* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != Symbol::BOOLEAN || e->rhs->sym->type != Symbol::BOOLEAN){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     e->sym = new Symbol(Symbol::BOOLEAN);
 }
 
@@ -101,17 +97,17 @@ void TypeChecker::visit(LessThan* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != Symbol::INT || e->rhs->sym->type != Symbol::INT){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     e->sym = new Symbol(Symbol::BOOLEAN);
 }
 
@@ -121,12 +117,12 @@ void TypeChecker::visit(Plus* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
-        if (!(e->lhs->sym->type == e->rhs->sym->type) && 
-            !(e->lhs->sym->type == Symbol::STRING && e->rhs->sym->type == Symbol::INT) && 
+
+        if (!(e->lhs->sym->type == e->rhs->sym->type) &&
+            !(e->lhs->sym->type == Symbol::STRING && e->rhs->sym->type == Symbol::INT) &&
             !(e->lhs->sym->type == Symbol::INT && e->rhs->sym->type == Symbol::STRING) &&
             !(e->lhs->sym->type == Symbol::STRING && e->rhs->sym->type == Symbol::STRING)){
             t_error = true;
@@ -134,7 +130,7 @@ void TypeChecker::visit(Plus* e)
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     if (e->lhs->sym->type == Symbol::STRING || e->rhs->sym->type == Symbol::STRING){
         e->sym = new Symbol(Symbol::STRING);
     } else if (e->lhs->sym->type == Symbol::INT && e->rhs->sym->type == Symbol::INT){
@@ -148,18 +144,18 @@ void TypeChecker::visit(Minus* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != Symbol::INT || e->rhs->sym->type != Symbol::INT){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
-    
+
+
     e->sym = new Symbol(Symbol::INT);
 }
 
@@ -169,17 +165,17 @@ void TypeChecker::visit(Times* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != Symbol::INT && e->rhs->sym->type != Symbol::INT){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     e->sym = new Symbol(Symbol::INT);
 }
 
@@ -189,17 +185,17 @@ void TypeChecker::visit(Division* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != Symbol::INT && e->rhs->sym->type != Symbol::INT){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     e->sym = new Symbol(Symbol::INT);
 }
 
@@ -209,17 +205,17 @@ void TypeChecker::visit(Equality* e)
     if (!t_error){
         e->lhs->accept(*this);
         e->lhs->sym = new Symbol(type_t);
-        
+
         e->rhs->accept(*this);
         e->rhs->sym = new Symbol(type_t);
-        
+
         if (e->lhs->sym->type != e->rhs->sym->type){
             t_error = true;
             error = true;
             std::cout << e->row << ":" << e->col << " Error: Invalid operands\n";
         }
     }
-    
+
     e->sym = new Symbol(Symbol::BOOLEAN);
 }
 
@@ -234,7 +230,7 @@ void TypeChecker::visit(FuncCall* e)
 {
     type_t = e->id->sym->type;
     e->sym = new Symbol(type_t);
-    
+
     for (int i = 0; i < e->expressions.size(); i++){
         e->expressions[i]->accept(*this);
     }
@@ -252,9 +248,9 @@ void TypeChecker::visit(IntArray* e)
  */
 void TypeChecker::visit(Print* e)
 {
-    
+
     e->expr->accept(*this);
-    
+
     if (type_t == Symbol::UNDEFINED || (type_t != Symbol::INT && type_t != Symbol::STRING && type_t != Symbol::BOOLEAN)){
         std::cout << e->expr->row << ":" << e->expr->col << " Error: Print statement contains invalid expression\n";
         error = true;
@@ -311,28 +307,15 @@ void TypeChecker::visit(ArrayAccess* e)
 /*
  * Types
  */
-void TypeChecker::visit(Boolean* e)
-{
-}
-
-void TypeChecker::visit(IntArrayType* e)
-{
-}
-
-void TypeChecker::visit(Integer* e)
-{
-}
-
-void TypeChecker::visit(String* e)
-{
-}
+void TypeChecker::visit(Boolean* e) {}
+void TypeChecker::visit(IntArrayType* e) {}
+void TypeChecker::visit(Integer* e) {}
+void TypeChecker::visit(String* e) {}
 
 /*
  *  Var Declaration
  */
-void TypeChecker::visit(VarDecl* e)
-{
-}
+void TypeChecker::visit(VarDecl* e) {}
 
 /*
  *  Method Declaration
@@ -345,7 +328,7 @@ void TypeChecker::visit(MethDecl* e)
         t_error = false;
         type_t = Symbol::UNDEFINED;
     }
-    
+
     e->ret->accept(*this);
     if (t_error){
         std::cout << e->ret->row << ":" << e->ret->col << " Error: Invalid return statement\n";
@@ -380,7 +363,7 @@ void TypeChecker::visit(MainClass* e)
 void TypeChecker::visit(Program* e)
 {
     e->main->accept(*this);
-    
+
     if (e->classes.size() > 0){
         for (int i = 0; i < e->classes.size(); i++){
             e->classes[i]->accept(*this);

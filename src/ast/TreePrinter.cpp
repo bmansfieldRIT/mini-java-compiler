@@ -1,6 +1,6 @@
 //
 //  TreePrinter.cpp
-//  
+//
 //
 //  Created by Brian Mansfield on 4/3/17.
 //
@@ -8,7 +8,7 @@
 
 #include "TreePrinter.hpp"
 
-TreePrinter::TreePrinter(string f) 
+TreePrinter::TreePrinter(string f)
 :   filename(f)
 {
     out.open(f);
@@ -167,12 +167,12 @@ void TreePrinter::visit(If* e)
     e->expr->accept(*this);
     out << " THEN ";
     e->then->accept(*this);
-    
+
     if (e->elze != NULL){
         out << " ELSE ";
         e->elze->accept(*this);
     }
-    
+
     out << ")\n";
 }
 
@@ -205,7 +205,7 @@ void TreePrinter::visit(Equals* e)
     out << "(EQUALS ";
     if (e->arr != NULL){
         e->arr->accept(*this);
-        
+
     } else {
         e->id->accept(*this);
     }
@@ -218,7 +218,7 @@ void TreePrinter::visit(ArrayAccess* e)
     out << "(ARRAY-ACCESS ";
     if (e->var != NULL){
         e->var->accept(*this);
-        
+
     } else {
         e->expr1->accept(*this);
     }
@@ -268,10 +268,10 @@ void TreePrinter::visit(MethDecl* e)
     out << "(METH-DECL ";
     e->methType->accept(*this);
     e->methID->accept(*this);
-    
+
     if (e->argTypes.size() > 0){
         out << "(TY-ID-LIST ";
-        
+
         for (int i = 0; i < e->argTypes.size(); i++){
             out << "(";
             e->argTypes[i]->accept(*this);
@@ -280,22 +280,22 @@ void TreePrinter::visit(MethDecl* e)
         }
         out << ")" << '\n';
     }
-    
+
     out << "\n(BLOCK\n";
     for (int i = 0; i < e->vardecls.size(); i++){
         e->vardecls[i]->accept(*this);
     }
-    
+
     for (int i = 0; i < e->statements.size(); i++){
         if (e->statements[i] != NULL){
             e->statements[i]->accept(*this);
         }
     }
-    
+
     out << "(RETURN ";
     e->ret->accept(*this);
     out << ")))\n";
-    
+
 }
 
 /*
@@ -303,16 +303,16 @@ void TreePrinter::visit(MethDecl* e)
  */
 void TreePrinter::visit(ClassDecl* e)
 {
-    
+
     out << "(CLASS-DECL ";
     e->id->accept(*this);
-    
+
     if (e->extID != NULL){
         out << "(EXTENDS ";
         e->extID->accept(*this);
         out << ")\n";
     }
-    
+
     if (e->vardecls.size() > 0 || e->methdecls.size() > 0){
         out << "(BLOCK\n";
         if (e->vardecls.size() > 0){
@@ -320,7 +320,7 @@ void TreePrinter::visit(ClassDecl* e)
                 e->vardecls[i]->accept(*this);
             }
         }
-    
+
         if (e->methdecls.size() > 0){
             for (int i = 0; i < e->methdecls.size(); i++){
                 e->methdecls[i]->accept(*this);
@@ -336,10 +336,10 @@ void TreePrinter::visit(ClassDecl* e)
 void TreePrinter::visit(MainClass* e)
 {
     out << "(MAIN-CLASS ";
-    
+
     e->id->accept(*this);
     e->args->accept(*this);
-    
+
     if (e->statements.size() > 0){
         out << "(BLOCK\n";
         for (int i = 0; i < e->statements.size(); i++){
@@ -355,8 +355,6 @@ void TreePrinter::visit(MainClass* e)
 void TreePrinter::visit(Program* e)
 {
     out << "(PROGRAM ";
-    
-    
     e->main->accept(*this);
     
     if (e->classes.size() > 0){
@@ -364,6 +362,5 @@ void TreePrinter::visit(Program* e)
             e->classes[i]->accept(*this);
         }
     }
-    
     out << ")\n";
 }

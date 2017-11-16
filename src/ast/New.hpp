@@ -1,6 +1,6 @@
 //
 //  New.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/24/17.
 //
@@ -16,12 +16,11 @@ class Visitor;
 
 class New : public Exp
 {
-    
+
 public:
     Exp* func;
     New(Exp* f);
     void accept(Visitor& v);
-    
 };
 
 #endif /* New_hpp */

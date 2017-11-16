@@ -1,6 +1,6 @@
 //
 //  Environment.cpp
-//  
+//
 //
 //  Created by Brian Mansfield on 4/10/17.
 //
@@ -66,18 +66,17 @@ void Environment::visit(StringLiteral* e)
 // is also a type
 void Environment::visit(Var* e)
 {
-
     if (!collectingMethods){
         bool foundVar = false;
         string varname = e->varID;
         int index = env.size() - 1;
-        
+
         // search the stack of scopes to find the closest variable declaration
         while (index >= 0 && !foundVar){
             auto search = env[index].find(varname);
             if (search != env[index].end()){ // check current scope
                 foundVar = true;
-                
+
                 if (!declarationFlag)
                     e->sym = search->second;
             }
@@ -87,7 +86,7 @@ void Environment::visit(Var* e)
             std::cout << e->row << ":" << e->col << " error: Variable " << varname << " does not exist\n";
             error = true;
         }
-        if (declarationFlag)        
+        if (declarationFlag)
             t_type = Symbol::IDENTIFIER;
         if (reportClassName){
             methodClassName = e->varID;
@@ -160,31 +159,26 @@ void Environment::visit(FuncCall* e)
     reportClassName = true;
     e->expr->accept(*this);
     reportClassName = false;
-    
-    
+
     // set the return value of a called method
     auto search = classes.find(methodClassName);
-    //std::cout << "finding class";
-    
+
     if (search == classes.end()){
         std::cout << e->id->row << ":" << e->id->col << " error: Class " << methodClassName << " does not exist\n";
         error = true;
     } else {
-        
+
         map<string, Symbol*> classMethods = search->second;
-        
         string methName = e->id->varID;
         auto msearch = classMethods.find(methName);
-        
+
         if (msearch == (search->second).end()){
-        
             std::cout << e->id->row << ":" << e->id->col << " error: Method " << e->id->varID << " does not exist in class "<< methodClassName << "\n";
             error = true;
         } else {
             Symbol* s = new Symbol((msearch->second)->type);
             e->id->sym = s;
         }
-        
     }
     for (int i = 0; i < e->expressions.size(); i++){
         e->expressions[i]->accept(*this);
@@ -214,11 +208,11 @@ void Environment::visit(If* e)
 void Environment::visit(Block* e)
 {
     enterScope();
-    
+
     for (int i = 0; i < e->body.size(); i++){
         e->body[i]->accept(*this);
     }
-    
+
     exitScope();
 }
 
@@ -235,14 +229,12 @@ void Environment::visit(Sidef* e)
 
 void Environment::visit(Equals* e)
 {
-    
     if (e->id != NULL){
         e->id->accept(*this);
     } else {
         e->arr->accept(*this);
     }
     e->rhs->accept(*this);
-    
 }
 
 void Environment::visit(ArrayAccess* e)
@@ -286,7 +278,7 @@ void Environment::visit(VarDecl* e)
     declarationFlag = true;
     e->type->accept(*this); // changes the current temporary type
     declarationFlag = false;
-    
+
     string varname = e->id->varID;
     auto search = env[env.size() - 1].find(varname);
     if (search != env[env.size() - 1].end()){
@@ -296,7 +288,6 @@ void Environment::visit(VarDecl* e)
         Symbol* s = new Symbol(t_type);
         env[env.size() - 1].insert(std::pair<string, Symbol*>(varname, s));
     }
-    
 }
 
 /*
@@ -304,12 +295,11 @@ void Environment::visit(VarDecl* e)
  */
 void Environment::visit(MethDecl* e)
 {
-    // hack
-    collectingMethods = true;
+    collectingMethods = true; // cheesy, but it works
     e->methType->accept(*this);
     e->sym = new Symbol(t_type);
     collectingMethods = false;
-    
+
     string methname = e->methID->varID;
     auto search = env[env.size() - 1].find(methname);
     if (search != env[env.size() - 1].end()){
@@ -319,17 +309,17 @@ void Environment::visit(MethDecl* e)
         Symbol* s = new Symbol(Symbol::METHOD);
         env[env.size() - 1].insert(std::pair<string, Symbol*>(methname, s));
     }
-    
+
     enterScope();
-    
+
     // could be replaced by a vector of varDecls eventually
     for (int i = 0; i < e->argTypes.size(); i++){
         declarationFlag = true;
         e->argTypes[i]->accept(*this); // changes the current temporary type
         declarationFlag = false;
-        
+
         e->argVars[i]->sym = new Symbol(t_type);
-        
+
         string varname = e->argVars[i]->varID;
         auto search = env[env.size() - 1].find(varname);
         if (search != env[env.size() - 1].end()){
@@ -340,23 +330,20 @@ void Environment::visit(MethDecl* e)
             env[env.size() - 1].insert(std::pair<string, Symbol*>(varname, s));
         }
     }
-    
-    //std::cout << e->vardecls.size() << '\n';
+
     if (e->vardecls.size() > 0){
         for (int i = 0; i < e->vardecls.size(); i++){
             e->vardecls[i]->accept(*this);
         }
     }
-    
-    //std::cout << e->statements.size() << '\n';
+
     if (e->statements.size() > 0){
         for (int i = 0; i < e->statements.size(); i++){
             e->statements[i]->accept(*this);
         }
     }
-    
-    e->ret->accept(*this);
 
+    e->ret->accept(*this);
     exitScope();
 }
 
@@ -365,7 +352,6 @@ void Environment::visit(MethDecl* e)
  */
 void Environment::visit(ClassDecl* e)
 {
-    
     if (e->extID != NULL){
         string classname = e->extID->varID;
         auto search = env[0].find(classname);
@@ -378,10 +364,8 @@ void Environment::visit(ClassDecl* e)
             error = true;
         }
     }
-    
-    enterScope();
-    
 
+    enterScope();
     for (int i = 0; i < e->vardecls.size(); i++){
         e->vardecls[i]->accept(*this);
     }
@@ -390,7 +374,6 @@ void Environment::visit(ClassDecl* e)
     for (int i = 0; i < e->methdecls.size(); i++){
         e->methdecls[i]->accept(*this);
     }
-    
     exitScope();
 }
 
@@ -400,13 +383,11 @@ void Environment::visit(ClassDecl* e)
 void Environment::visit(MainClass* e)
 {
     inMainClass = true;
-    
     if (e->statements.size() > 0){
         for (int i = 0; i < e->statements.size(); i++){
             e->statements[i]->accept(*this);
         }
     }
-    
     inMainClass = false;
 }
 
@@ -416,7 +397,7 @@ void Environment::visit(MainClass* e)
 void Environment::visit(Program* e)
 {
     enterScope();
-    
+
     mainClassName = e->main->id->varID;
     Symbol* sy = new Symbol(Symbol::CLASS);
     env[0].insert(std::pair<string, Symbol*>(mainClassName, sy));
@@ -425,7 +406,7 @@ void Environment::visit(Program* e)
     for (int i = 0; i < e->classes.size(); i++){
         map<string, Symbol*> methods;
         for (int j = 0; j < e->classes[i]->methdecls.size(); j++){
-            
+
             // add this method/return type to a map of methods associated with this class
             string methName = e->classes[i]->methdecls[j]->methID->varID;
             e->classes[i]->methdecls[j]->methType->accept(*this);
@@ -434,7 +415,7 @@ void Environment::visit(Program* e)
         }
         // add the map of methods to a global map of classes->methods+method return types
         classes.insert(std::pair<string, map<string, Symbol*>>(e->classes[i]->id->varID, methods));
-        
+
 
         // check for multiply defined classes
         string classname = e->classes[i]->id->varID;
@@ -445,13 +426,12 @@ void Environment::visit(Program* e)
         }
         Symbol* s = new Symbol(Symbol::CLASS);
         env[0].insert(std::pair<string, Symbol*>(classname, s));
-        //std::cout << "inserting " << classname << '\n';
     }
     collectingMethods = false;
-    
+
     // name check each class
     e->main->accept(*this);
-    
+
     if (e->classes.size() > 0){
         for (int i = 0; i < e->classes.size(); i++){
             e->classes[i]->accept(*this);

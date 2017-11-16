@@ -1,6 +1,6 @@
 //
 //  Main.cpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/24/17.
 //
@@ -18,7 +18,7 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if (tok == Token::FALSE){
         i++;
         False* f = new False;
@@ -26,13 +26,13 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if (tok == Token::LPAREN){
         i++;
         Exp* ret = parseExpS(tokens, i);
         ret->row = tokens[i].row;
         ret->col = tokens[i].col;
-        
+
         if (tokens[i].id == Token::RPAREN){
             i++;
             Exp* r = parseExpEPrime(ret, tokens, i);
@@ -43,7 +43,7 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
             errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Missing closing parenthesis\n";
             throw errorMsg;
         }
-        
+
     } else if(tok == Token::INTLIT){
         IntLiteral* il = new IntLiteral( tokens[i].intval );
         i++;
@@ -51,7 +51,7 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if(tok == Token::STRINGLIT){
         StringLiteral* sl = new StringLiteral( tokens[i].strval );
         i++;
@@ -59,7 +59,7 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if(tok == Token::BANG){
         i++;
         Not* n = new Not(parseExpS(tokens, i));
@@ -69,7 +69,7 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if (tok == Token::ID){
         Var* v = new Var(tokens[i].strval, tokens[i].row, tokens[i].col);
         i++;
@@ -77,29 +77,29 @@ Exp* Parser::parseExpE(vector<Token>& tokens, int& i){
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if (tok == Token::THIS){
         i++;
         This* t = new This(tokens[i].row, tokens[i].col);
         t->row = tokens[i].row;
         t->col = tokens[i].col;
-        
+
         Exp* r = parseExpEPrime(t, tokens, i);
         r->row = tokens[i].row;
         r->col = tokens[i].col;
         return r;
-        
+
     } else if (tok == Token::NEW){
         i++;
         Exp* e = parseExpENew(tokens, i);
         e->row = tokens[i].row;
         e->col = tokens[i].col;
-        
+
         New* n = new New(e);
         n->row = tokens[i].row;
         n->col = tokens[i].col;
         return n;
-        
+
     } else {
         errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Invalid expression\n";
         throw errorMsg;
@@ -117,14 +117,14 @@ Exp* Parser::parseExpENew(vector<Token>& tokens, int& i)
             Exp* e = parseExpS(tokens, i);
             e->row = tokens[i].row;
             e->col = tokens[i].col;
-            
+
             tok = tokens[i].id;
             if (tok == Token::RBRACKET){
                 i++;
                 IntArray* ia = new IntArray(e);
                 ia->row = tokens[i].row;
                 ia->col = tokens[i].col;
-                
+
                 return ia;
             } else {
                 errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Invalid expression\n";
@@ -165,112 +165,112 @@ Exp* Parser::parseExpEPrime(Exp* e1, vector<Token>& tokens, int& i){
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         And* a = new And(e1, e2);
         a->row = tokens[i].row;
         a->col = tokens[i].col;
-        
+
         return a;
-        
+
     } else if (tok == Token::OR){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         Or* o = new Or(e1, e2);
         o->row = tokens[i].row;
         o->col = tokens[i].col;
-        
+
         return o;
-        
+
     } else if (tok == Token::LESSTHAN){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         LessThan* lt = new LessThan(e1, e2);
         lt->row = tokens[i].row;
         lt->col = tokens[i].col;
-        
+
         return lt;
-        
+
     } else if (tok == Token::PLUS){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         Plus* p = new Plus(e1, e2);
         p->row = tokens[i].row;
         p->col = tokens[i].col;
-        
-        
+
+
         return p;
-        
+
     } else if (tok == Token::MINUS){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         Minus* m = new Minus(e1, e2);
         m->row = tokens[i].row;
         m->col = tokens[i].col;
-        
+
         return m;
-        
+
     } else if (tok == Token::TIMES){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         Times* t = new Times(e1, e2);
         t->row = tokens[i].row;
         t->col = tokens[i].col;
-        
+
         return t;
-        
+
     } else if (tok == Token::DIV){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         Division* d = new Division(e1, e2);
         d->row = tokens[i].row;
         d->col = tokens[i].col;
-        
+
         return d;
-        
+
     } else if (tok == Token::EQUALS){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         Equality* e = new Equality(e1, e2);
         e->row = tokens[i].row;
         e->col = tokens[i].col;
-        
+
         return e;
-        
+
     } else if (tok == Token::LBRACKET){
         i++;
         Exp* e2 = parseExpS(tokens, i);
         e2->row = tokens[i].row;
         e2->col = tokens[i].col;
-        
+
         tok = tokens[i].id;
-        
+
         if (tok == Token::RBRACKET){
             i++;
             ArrayAccess* arr = new ArrayAccess(e1, e2);
             arr->row = tokens[i].row;
             arr->col = tokens[i].col;
-            
+
             return arr;
         } else {
             errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Missing closing bracket";
@@ -283,12 +283,12 @@ Exp* Parser::parseExpEPrime(Exp* e1, vector<Token>& tokens, int& i){
             Length* l = new Length(e1);
             l->row = tokens[i].row;
             l->col = tokens[i].col;
-            
+
             i++;
             return l;
-            
+
         } else if (tok == Token::ID){
-            
+
             Var* v = new Var(tokens[i].strval, tokens[i].row, tokens[i].col);
             i++;
             tok = tokens[i].id;
@@ -304,10 +304,10 @@ Exp* Parser::parseExpEPrime(Exp* e1, vector<Token>& tokens, int& i){
                     Exp* e = parseExpS(tokens, i);
                     e->row = tokens[i].row;
                     e->col = tokens[i].col;
-                    
+
                     tok = tokens[i].id;
                     args.push_back(e);
-                } 
+                }
                 i++;
                 FuncCall* fc = new FuncCall(e1, v, args);
                 return fc;
@@ -320,7 +320,7 @@ Exp* Parser::parseExpEPrime(Exp* e1, vector<Token>& tokens, int& i){
             throw errorMsg;
         }
     }
-        
+
     return e1;
 }
 
@@ -335,7 +335,7 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
     if (tok == Token::PRINTLN){
         i++;
         Exp* e = parseExpS(tokens, i);
-        
+
         tok = tokens[i].id;
         if (tok == Token::SEMICOLON){
             i++;
@@ -345,9 +345,9 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
             errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: missing semicolon\n";
             throw errorMsg;
         }
-        
+
     } else if (tok == Token::IF){
-        
+
         i++;
         tok = tokens[i].id;
         if (tok == Token::LPAREN){
@@ -378,9 +378,9 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
             throw errorMsg;
         }
     } else if (tok == Token::LBRACE){
-        
+
         vector<Statement*> body;
-        
+
         i++;
         tok = tokens[i].id;
         while (tok != Token::RBRACE){
@@ -388,20 +388,20 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
                 errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: block statement missing closing brace\n";
                 throw errorMsg;
             }
-            
+
             Statement* s = parseStatementS(tokens, i);
             if (s == NULL){
                 errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Invalid statement in block\n";
                 throw errorMsg;
             }
-            
+
             body.push_back( s );
             tok = tokens[i].id;
         }
         i++;
         Block* b = new Block(body);
         return b;
-        
+
     } else if (tok == Token::WHILE){
         i++;
         tok = tokens[i].id;
@@ -410,7 +410,7 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
             Exp* e = parseExpS(tokens, i);
             e->row = tokens[i].row;
             e->col = tokens[i].col;
-            
+
             tok = tokens[i].id;
             if (tok == Token::RPAREN){
                 i++;
@@ -425,13 +425,13 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
             errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: While statement missing opening parenthesis\n";
             throw errorMsg;
         }
-        
+
     } else if (tok == Token::SIDEF){
         i++;
         Exp* s = parseExpS(tokens, i);
         s->row = tokens[i].row;
         s->col = tokens[i].col;
-        
+
         tok = tokens[i].id;
         if (tok == Token::SEMICOLON){
             i++;
@@ -441,20 +441,20 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
             errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Sidef statement missing semicolon\n";
             throw errorMsg;
         }
-        
+
     } else if (tok == Token::ID){
         Var* v = new Var(tokens[i].strval, tokens[i].row, tokens[i].col);
-        
+
         i++;
         tok = tokens[i].id;
-        
+
         if (tok == Token::EQSIGN){
-            
+
             i++;
             Exp* e = parseExpS(tokens, i);
             e->row = tokens[i].row;
             e->col = tokens[i].col;
-            
+
             tok = tokens[i].id;
             if (tok == Token::SEMICOLON){
                 i++;
@@ -464,17 +464,17 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
                 errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Equals statement missing semicolon\n";
                 throw errorMsg;
             }
-            
+
         } else if (tok == Token::LBRACKET){
             i++;
             Exp* e1 = parseExpS(tokens, i);
             e1->row = tokens[i].row;
             e1->col = tokens[i].col;
-            
+
             tok = tokens[i].id;
             if (tok == Token::RBRACKET){
                 ArrayAccess* arr = new ArrayAccess(v, e1);
-                
+
                 i++;
                 tok = tokens[i].id;
                 if (tok == Token::EQSIGN){
@@ -482,7 +482,7 @@ Statement* Parser::parseStatementS(vector<Token>& tokens, int& i)
                     Exp* e2 = parseExpS(tokens, i);
                     e2->row = tokens[i].row;
                     e2->col = tokens[i].col;
-                    
+
                     tok = tokens[i].id;
                     if (tok == Token::SEMICOLON){
                         i++;
@@ -525,31 +525,31 @@ Type* Parser::parseType(vector<Token>& tokens, int& i)
                 errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Array Type missing closing bracket\n";
                 throw errorMsg;
             }
-            
+
         } else {
             Integer* it = new Integer();
             return it;
         }
-        
+
     } else if (tok == Token::BOOLEAN){
         i++;
         Boolean* b = new Boolean();
         return b;
-        
+
     } else if (tok == Token::STRING){
         i++;
         String* s = new String();
         return s;
-        
+
     } else if (tok == Token::ID){
         if (tokens[i+1].id != Token::ID)
             return NULL;
         Var* v = new Var(tokens[i].strval, tokens[i].row, tokens[i].col);
         i++;
         return v;
-        
+
     }
-    
+
     return NULL;
 }
 
@@ -575,12 +575,12 @@ VarDecl* Parser::parseVarDecl(vector<Token>& tokens, int& i)
 
 MethDecl* Parser::parseMethodDecl(vector<Token>& tokens, int& i)
 {
-    
+
     vector<Type*> argTypes;
     vector<Var*> argVars;
     vector<VarDecl*> varDecls;
     vector<Statement*> statements;
-    
+
     int tok = tokens[i].id;
     if (tok == Token::PUBLIC){
         i++;
@@ -592,14 +592,14 @@ MethDecl* Parser::parseMethodDecl(vector<Token>& tokens, int& i)
         tok = tokens[i].id;
         if (tok == Token::ID){
             Var* methID = new Var(tokens[i].strval, tokens[i].row, tokens[i].col);
-            
+
             i++;
             tok = tokens[i].id;
             if (tok == Token::LPAREN){
-                
+
                 i++;
                 tok = tokens[i].id;
-                
+
                 int argcount = 0;
                 while (tok != Token::RPAREN){
                     if (argcount > 0){
@@ -628,33 +628,33 @@ MethDecl* Parser::parseMethodDecl(vector<Token>& tokens, int& i)
                     }
                     argcount++;
                 }
-                
+
                 i++;
                 tok = tokens[i].id;
                 if (tok == Token::LBRACE){
                     i++;
                     tok = tokens[i].id;
                     Exp* ret = NULL;
-                    
+
                     VarDecl* vd = parseVarDecl(tokens, i);
                     while (vd != NULL){
                         varDecls.push_back(vd);
                         vd = parseVarDecl(tokens, i);
                     }
-                    
+
                     Statement* st = parseStatementS(tokens, i);
                     while (st != NULL){
                         statements.push_back(st);
                         st = parseStatementS(tokens, i);
                     }
-                    
+
                     tok = tokens[i].id;
                     if (tok == Token::RETURN){
                         i++;
                         ret = parseExpS(tokens, i);
                         ret->row = tokens[i].row;
                         ret->col = tokens[i].col;
-                        
+
                         tok = tokens[i].id;
                         if(tok == Token::SEMICOLON){
                             i++;
@@ -675,7 +675,7 @@ MethDecl* Parser::parseMethodDecl(vector<Token>& tokens, int& i)
                         errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: method missing return statement\n";
                         throw errorMsg;
                     }
-                    
+
                 } else {
                     errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Sidef statement missing semicolon\n";
                     throw errorMsg;
@@ -689,7 +689,7 @@ MethDecl* Parser::parseMethodDecl(vector<Token>& tokens, int& i)
             throw errorMsg;
         }
     }
-    
+
     return NULL;
 }
 
@@ -716,7 +716,7 @@ ClassDecl* Parser::parseClassDecl(vector<Token>& tokens, int& i)
                     throw errorMsg;
                 }
             }
-            
+
             vector<VarDecl*> varDecls;
             vector<MethDecl*> methDecls;
             if (tok == Token::LBRACE){
@@ -725,7 +725,7 @@ ClassDecl* Parser::parseClassDecl(vector<Token>& tokens, int& i)
                 while (tok != Token::RBRACE){
                     VarDecl* vd = parseVarDecl(tokens, i);
                     MethDecl* md = parseMethodDecl(tokens, i);
-                    
+
                     if(vd != NULL)
                         varDecls.push_back(vd);
                     if(md != NULL)
@@ -734,8 +734,8 @@ ClassDecl* Parser::parseClassDecl(vector<Token>& tokens, int& i)
                         errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: statements outside method declaration\n";
                         throw errorMsg;
                     }
-                    
-                    
+
+
                     tok = tokens[i].id;
                 }
                 i++;
@@ -803,7 +803,7 @@ MainClass* Parser::parseMainClass(vector<Token>& tokens, int& i)
                                                             i++;
                                                             tok = tokens[i].id;
                                                             vector<Statement*> statements;
-                                                            
+
                                                             while (tok != Token::RBRACE){
                                                                 Statement* s = parseStatementS(tokens, i);
                                                                 if (s == NULL){
@@ -813,14 +813,14 @@ MainClass* Parser::parseMainClass(vector<Token>& tokens, int& i)
                                                                 statements.push_back(s);
                                                                 tok = tokens[i].id;
                                                             }
-                                                            
+
                                                             i++;
                                                             tok = tokens[i].id;
                                                             if (tok == Token::RBRACE){
                                                                 i++;
                                                                 MainClass* mc = new MainClass(v, v2, statements);
                                                                 return mc;
-                                                                
+
                                                             } else {
                                                                 errorMsg =  to_string(tokens[i].row) + ":" + to_string(tokens[i].col) + " Error: Main class definition missing closing brace\n";
                                                                 throw errorMsg;
@@ -883,23 +883,24 @@ MainClass* Parser::parseMainClass(vector<Token>& tokens, int& i)
     }
 }
 
-Program* Parser::parseProgram(vector<Token>& tokens, int& i){
-    
+Program* Parser::parseProgram(vector<Token>& tokens){
+
     vector<ClassDecl*> classes;
-    
+
+    int i = 0;
     MainClass* mc = parseMainClass(tokens, i);
-    
+
     int tok = tokens[i].id;
-    
+
     while (tok != Token::EOFILE && tok != Token::BAD){
         ClassDecl* cd = parseClassDecl(tokens, i);
-        
+
         if (cd != NULL){
             classes.push_back(cd);
         }
         tok = tokens[i].id;
     }
-    
+
     Program* prog = new Program(mc, classes);
     return prog;
 }

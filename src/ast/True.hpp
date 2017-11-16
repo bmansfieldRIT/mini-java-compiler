@@ -1,6 +1,6 @@
 //
 //  True.hpp
-//  
+//
 //
 //  Created by Brian Mansfield on 3/23/17.
 //
@@ -17,11 +17,10 @@ class Visitor;
 
 class True : public Exp
 {
-    
+
 public:
     True(void);
     void accept(Visitor& v);
-    
 };
 
 #endif /* True_hpp */
